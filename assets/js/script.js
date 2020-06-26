@@ -1,3 +1,4 @@
+
 let bancoDeDados_img = [ 
     {class:"car1",
      scr:"assets/img/img1.png"},
@@ -44,6 +45,7 @@ let bancoDeDados_img = [
      {class:"card15",
      scr:"assets/img/img15.png"}   
 ];
+console.log(bancoDeDados_img)
 
 
 //array para setar o id das cartas
@@ -51,6 +53,7 @@ let setId = [];
 for (let i = 0; i < 30; i++) {
      setId[i] = "cart"+ (i+1);            
 };
+
 
 
 
@@ -85,26 +88,33 @@ function iniciarJogo() {
     }
 
     //Forma array para buscar no banco de dados de imagem, algumas imagem aleatorias
-
     let array_img = [];
 
+    
+
+
     //estrutura de repeticao para acresentar um determinadoo numeros de imagem dentro de um array, sem repetir as imagens.
-    while ( array_img.length < numeros_de_cartas ){
+    while(array_img.length < numeros_de_cartas){
 
-        let numero_aleatorio = (Math.floor(Math.random() * 15) + 1);
+        // gerando um numero aleatorio de 0 a 15
+        let num_ale = Math.floor(Math.random() * 15);
+        
+        // Essa variavel ira pegar uma referencia de imagem aleatoria no meu banco de dados de imagem
+        let var_verifica = bancoDeDados_img[num_ale].scr
 
-        // Essa variavel sera para verificar se a imagem e repetida
-        let verificadora = "assets/img/img"+numero_aleatorio+".png";
-
-        //Se dentro do meu array nao tiver a imagem gerada acima, ele acrescentara no meu array, caso contrario
-        //ele gera uma outra imagem  para que ela nao se repitta
-        if (array_img.indexOf(verificadora) == -1) {
-            array_img.push(verificadora);
-            array_img.push(verificadora);
+        //Verificando se no meu array_img ja existe a imagem gerada a cima, se sim
+        if (array_img.indexOf(var_verifica) == -1)
+        {
+            
+            array_img.push(var_verifica);
+            array_img.push(var_verifica);
+            
         }
+
     }
-   
     console.log(array_img);
+
+    
 
     let divCard = null;
     let linha = null;
@@ -114,7 +124,7 @@ function iniciarJogo() {
     let tagImagem = null;
     let tagImagem2 = null;
     let control_id = 0;
-    let teste = null;
+    let set_id = null;
     let img_card = null;
     let indice = null;
     let array_verificador = [];
@@ -149,18 +159,15 @@ function iniciarJogo() {
             
            
         
-        array_img.splice(indice, 1);
-
-
-        
+        array_img.splice(indice, 1);   
     
-        teste = setId[control_id];
+        set_id = setId[control_id];
 
         ponto_em_linha = document.createElement("td");    
 
         divCard = document.createElement("div");
         divCard.setAttribute("class", "card");
-        divCard.setAttribute("id",teste);
+        divCard.setAttribute("id",set_id);
         divCard.setAttribute("onclick", "girarCarta()");
 
         divFaceBack = document.createElement("div");
@@ -225,4 +232,8 @@ function girarCarta(){
 
 
 
+}
+
+function reset() {
+    aler("funciona");
 }
