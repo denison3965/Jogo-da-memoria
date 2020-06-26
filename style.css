@@ -157,6 +157,7 @@ table, tr, td{
     width: 100px;
     margin: auto;
     position: relative;
+    perspective: 600px;
     
 }
 .card:hover{
@@ -206,6 +207,6 @@ table, tr, td{
 }
 .invisivel{
     visibility: hidden;
-    transform: rotateY(-180deg);
+    transform: rotateY(180deg);
 
 }
