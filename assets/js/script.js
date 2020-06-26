@@ -65,6 +65,7 @@ function iniciarJogo() {
     let numero_de_img = 0;
     let tabuleiro = document.getElementById("tabuleiro_do_jogo");
 
+    //Setando as variaveis de controle de acordo com o nivel escolhido pelo jogador
     switch (dificuldade) {
         case "facil":
             numeros_de_cartas = 12;
@@ -102,7 +103,7 @@ function iniciarJogo() {
         // Essa variavel ira pegar uma referencia de imagem aleatoria no meu banco de dados de imagem
         let var_verifica = bancoDeDados_img[num_ale].scr
 
-        //Verificando se no meu array_img ja existe a imagem gerada a cima, se sim
+        //Verificando se no meu array_img ja existe a imagem gerada a cima, se sim ele pula o if e pega uma outra imagem
         if (array_img.indexOf(var_verifica) == -1)
         {
             
@@ -112,10 +113,16 @@ function iniciarJogo() {
         }
 
     }
-    console.log(array_img);
+   
 
+    for (let i = 0; i < 3; i++) {
+
+        array_img.sort(function(a, b){return 0.5 - Math.random()});
+    }
     
 
+    
+    //Iniciando variaveis para formacao e renderizacao da div card
     let divCard = null;
     let linha = null;
     let ponto_em_linha = null;
@@ -127,12 +134,7 @@ function iniciarJogo() {
     let set_id = null;
     let img_card = null;
     let indice = null;
-    let array_verificador = [];
 
-    for (let i = 0; i < numero_de_img; i++) {
-        array_verificador[i] = 1;
-        
-    }
     
     //Fazendo o calculo para obter o numero de colunas
 
@@ -145,24 +147,21 @@ function iniciarJogo() {
     
         for (let i = 0; i < colunas; i++) {
 
+        //Formando um numero aleatorio
         let numero_aleatorio2 = Math.floor(Math.random() *  (numero_de_img - 1));
-        console.log(numero_aleatorio2)
-        img_card = array_img[numero_aleatorio2];
+      
+        //jogando o primeiro item do array para a variavel img_card e logo apos, tirando o esse item do array 
+        img_card = array_img[0];
+        array_img.shift();  
 
         console.log(img_card);
         console.log(array_img);
 
-        indice = array_img.indexOf(img_card);
-
-        array_verificador.splice(indice, 1);
-
-            
-           
-        
-        array_img.splice(indice, 1);   
-    
+        //jogando dentro da variavel set_id em ordem crescente os valor do array setId (card1, card2 ... card 30).
         set_id = setId[control_id];
 
+
+        //formando a div card
         ponto_em_linha = document.createElement("td");    
 
         divCard = document.createElement("div");
@@ -196,15 +195,17 @@ function iniciarJogo() {
         linha.appendChild(ponto_em_linha);
 
         control_id++ ;
-
+          
 
       
         
         }
+        //renderizar uma carta na tela.
         tabuleiro.appendChild(linha)
         
     }
 
+    //Referencia de div card feito acima 
     /*
         <table id="tabuleiro_do_jogo">
         <tr>
@@ -235,5 +236,48 @@ function girarCarta(){
 }
 
 function reset() {
-    aler("funciona");
+    //alert("oi");
+    let tabuleiro2 = document.getElementById("tabuleiro_do_jogo").children;
+    console.log(tabuleiro2);
+    let dificuldade2 = document.getElementById("dificuldade_id").value;
+    let numero_de_linha2 = 0;
+
+    
+    //Setando as variaveis de controle de acordo com o nivel escolhido pelo jogador
+    switch (dificuldade2) {
+        case "facil":
+           
+            numero_de_linha2 = 3;     
+                       
+            break;
+        
+        case "medio":
+            
+            numero_de_linha2 = 4;
+                 
+
+            break;
+        case "dificil":    
+            numero_de_linha2 = 5;    
+    
+        default:
+            break;
+    }
+    console.log(numero_de_linha2.length)
+    if(numero_de_linha2.length != 0 ){
+
+    
+        for (let i = numero_de_linha2 - 1; i < numero_de_linha2; i--) {
+            tabuleiro2[i].remove();
+            console.log(tabuleiro2);
+            
+        }
+    }
+
+
+    // if (tabuleiro2.parentNode)
+    // {
+    //     tabuleiro2.parentNode.removeChild();
+    // }
+
 }
