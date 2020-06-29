@@ -55,7 +55,7 @@ for (let i = 0; i < 30; i++) {
 };
 
 
-
+//====================================================================================================================
 
 function iniciarJogo() {
     let dificuldade = document.getElementById("dificuldade_id").value;
@@ -101,7 +101,7 @@ function iniciarJogo() {
         let num_ale = Math.floor(Math.random() * 15);
         
         // Essa variavel ira pegar uma referencia de imagem aleatoria no meu banco de dados de imagem
-        let var_verifica = bancoDeDados_img[num_ale].scr
+        let var_verifica = bancoDeDados_img[num_ale]
 
         //Verificando se no meu array_img ja existe a imagem gerada a cima, se sim ele pula o if e pega uma outra imagem
         if (array_img.indexOf(var_verifica) == -1)
@@ -113,8 +113,10 @@ function iniciarJogo() {
         }
 
     }
-   
 
+    console.log(array_img);
+    //Aqui por meio de um loop for eu estarei embaralhando o meu array_img aleatoriamento 3 vezes,
+    //para que eu consiga setar a imagens nas cartas utilizando a função shift.h
     for (let i = 0; i < 3; i++) {
 
         array_img.sort(function(a, b){return 0.5 - Math.random()});
@@ -133,6 +135,7 @@ function iniciarJogo() {
     let control_id = 0;
     let set_id = null;
     let img_card = null;
+    let class_card = null;
     let indice = null;
 
     
@@ -147,15 +150,13 @@ function iniciarJogo() {
     
         for (let i = 0; i < colunas; i++) {
 
-        //Formando um numero aleatorio
-        let numero_aleatorio2 = Math.floor(Math.random() *  (numero_de_img - 1));
-      
         //jogando o primeiro item do array para a variavel img_card e logo apos, tirando o esse item do array 
-        img_card = array_img[0];
-        array_img.shift();  
+        img_card = array_img[0].scr;
+        class_card = array_img[0].class;
+        array_img.shift();    
 
-        console.log(img_card);
-        console.log(array_img);
+        //console.log(img_card);
+        //console.log(array_img);
 
         //jogando dentro da variavel set_id em ordem crescente os valor do array setId (card1, card2 ... card 30).
         set_id = setId[control_id];
@@ -166,6 +167,7 @@ function iniciarJogo() {
 
         divCard = document.createElement("div");
         divCard.setAttribute("class", "card");
+        divCard.classList.add(class_card);
         divCard.setAttribute("id",set_id);
         divCard.setAttribute("onclick", "girarCarta()");
 
@@ -223,17 +225,112 @@ function iniciarJogo() {
 
 
 
+//===================================================================================================================================
+
+//Inicializando variavel de controle, e tambem arreys
+//no array verificaCartasIguais iremos guardar as classe que irao verificar se o par é o certo uo não
+//no array cartasViradas iremos guardar a referencia das duas cartas viradas pelo jogador
+let control_cartasViradas = 0;
+let verificarCartasIguais = [];
+let cartasViradas = [];
+let pontuacao = 0;
+
+
+
+
 
 function girarCarta(){
+
+    //pegando  carta que foi virada e armazenando-a na variavel carta 
     let carta = document.getElementById(event.currentTarget.id);
-    console.log(carta.children);
+
+    let tabuleiro3 = document.getElementById("tabuleiro_do_jogo");
+    let pontuacaoParaGanhar = 0;
+
+    switch (tabuleiro3.children.length) {
+        case 3:
+            pontuacaoParaGanhar = 6;
+            break;
+        case 4:
+            pontuacaoParaGanhar = 10;
+            break;
+        case 5:
+            pontuacaoParaGanhar = 15;
+            break;    
     
-    carta.children[0].classList.toggle("invisivel");
-    carta.children[1].classList.toggle("invisivel");
+        default:
+            break;
+    }
+
+    //Se a largura do meu array cartaVirada for menor que dois eu entro na condicional if
+    if  (cartasViradas.length < 2) {
+
+        
+        
+        //Aqui ele verifica se a carta clicada não é a mesma, e se for, ele sai da função antes de excutar o código 
+        let carta_clicada = carta.children[1].classList[1];
+        if (carta_clicada == "visivel") {
+            return
+        }
 
 
 
+        // Aqui temos a lógica para conseguirmos virar e desvirar as cartas sempre que essa função é chamada
+        carta.children[0].classList.toggle("invisivel");
+        carta.children[1].classList.toggle("invisivel");
+
+        carta.children[0].classList.toggle("visivel");
+        carta.children[1].classList.toggle("visivel");
+
+        //Armazenando a carta selecionada(virada) em um array  
+        cartasViradas[control_cartasViradas] = carta;  
+
+        //Armazena a class que ira determinar se as cartas são iguais ou não (Mesmo desenho)
+        verificarCartasIguais[control_cartasViradas] = carta.classList[1];
+
+        control_cartasViradas++
+        return
+    }
+    //Quando as duas cartas forem selecionadas e as tais forem iguais...
+    else if (verificarCartasIguais[0] == verificarCartasIguais[1]) {
+
+    cartasViradas[0].remove()
+    cartasViradas[1].remove()
+    pontuacao++
+
+    if (pontuacao == pontuacaoParaGanhar) {
+        alert("Voce ganhou meus parábens")
+    }
+    
+    } 
+    //Senão forem iguais
+    {
+        //Gira as cartas selecionadas para sua posição padrão
+        for (let i = 0; i < 2; i++) {
+
+            carta_teste_back = cartasViradas[i].children[0].classList;
+
+            carta_teste_back.remove("invisivel");
+            carta_teste_back.add("visivel");
+            
+
+            carta_teste_front = cartasViradas[i].children[1].classList;
+
+            carta_teste_front.remove("visivel");
+            carta_teste_front.add("invisivel");
+
+            
+        }
+        
+        //limpo minha variavel de controle e limpa meu array para a proxima chamada da função
+         control_cartasViradas = 0;
+
+         cartasViradas = [];
+
+    }
 }
+
+//========================================================================================================================
 
 function reset() {
     //alert("oi");
